@@ -1,0 +1,55 @@
+name: Refresh I-list1.json data
+
+on:
+  schedule:
+    # Примерно раз в 10 дней: 10, 20 и 30 числа месяца в 03:00 UTC
+    - cron: "0 3 10,20,30 * *"
+  workflow_dispatch: {}
+
+jobs:
+  refresh-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install project
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+
+      - name: Generate fresh packets (250 cycles) and update web/I-list1.json
+        run: |
+          python - << 'EOF'
+          import shutil
+          from GenSpecialJunkPacket import WireGuardPacketTester
+
+          cycles = 250
+          tester = WireGuardPacketTester(cycles=cycles)
+          tester.run_test()
+          tester.save_working_packets(filename="packets.json")
+
+          shutil.copy2("packets.json", "web/I-list1.json")
+          print("Updated web/I-list1.json from freshly generated packets.json")
+          EOF
+
+      - name: Commit and push changes if any
+        run: |
+          if git diff --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add web/I-list1.json packets.json
+          git commit -m "chore: refresh I-list1.json data (250 cycles)"
+          git push
+

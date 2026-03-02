@@ -1,0 +1,2 @@
+# Runtime — только stdlib
+# Для разработки: pip install -e ".[dev]"

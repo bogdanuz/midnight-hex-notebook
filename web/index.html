@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+    <title>Hex values</title>
+    <!-- favicon при необходимости положите в корень: favicon.ico -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            color: #e5e7eb;
+            min-height: 100vh;
+            padding: 24px;
+            line-height: 1.6;
+        }
+
+        .site-btn {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            background: rgba(15, 23, 42, 0.8);
+            color: #e5e7eb;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            padding: 8px 14px;
+            border-radius: 999px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            z-index: 1000;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        .site-btn:hover {
+            background: rgba(30, 64, 175, 0.9);
+            border-color: rgba(191, 219, 254, 0.9);
+            transform: translateY(-1px);
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 56px 20px 40px;
+        }
+
+        .title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #e5e7eb;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .instruction-btn {
+            display: block;
+            margin: 0 auto 24px;
+            background: #1d4ed8;
+            color: #e5e7eb;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 999px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            max-width: 260px;
+            width: 100%;
+        }
+
+        .instruction-btn:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .subtitle {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #9ca3af;
+            font-size: 0.95rem;
+            padding: 0 10px;
+        }
+
+        .input-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .input-label {
+            min-width: 40px;
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        .input-field {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            padding: 8px 0;
+            outline: none;
+            min-width: 200px;
+        }
+
+        .copy-btn {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border: 1px solid rgba(102, 126, 234, 0.4);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .copy-btn:hover {
+            background: rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .refresh-btn {
+            display: block;
+            width: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .quota-info {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            text-align: center;
+            margin-bottom: 16px;
+            min-height: 1.2em;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(239, 68, 68, 0.95);
+            color: #f9fafb;
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            z-index: 3000;
+            display: none;
+        }
+
+        .footer-buttons {
+            display: none;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .modal-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #e0e0e0;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            padding-right: 40px;
+        }
+
+        .modal-subtitle {
+            font-size: 1.3rem;
+            margin: 25px 0 15px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .modal-text {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            font-weight: normal;
+        }
+
+        .modal-list {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .modal-list li {
+            margin-bottom: 10px;
+            font-weight: normal;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 70px 15px 30px;
+            }
+            
+            .title {
+                font-size: 1.8rem;
+                margin-bottom: 12px;
+            }
+            
+            .instruction-btn {
+                padding: 12px 24px;
+                font-size: 0.95rem;
+                margin-bottom: 25px;
+            }
+            
+            .subtitle {
+                font-size: 0.95rem;
+                margin-bottom: 25px;
+            }
+            
+            .image-container img {
+                max-width: 220px;
+            }
+            
+            .input-section {
+                padding: 20px 15px;
+                margin-bottom: 20px;
+            }
+            
+            .input-group {
+                padding: 10px 12px;
+                margin-bottom: 12px;
+            }
+            
+            .input-field {
+                min-width: 150px;
+                font-size: 0.9rem;
+            }
+            
+            .site-btn {
+                padding: 10px 16px;
+                font-size: 0.85rem;
+                top: 15px;
+                right: 15px;
+            }
+            
+            .footer-btn {
+                min-width: 140px;
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .modal-content {
+                padding: 25px 20px;
+            }
+            
+            .modal-title {
+                font-size: 1.5rem;
+            }
+            
+            .modal-subtitle {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 65px 10px 25px;
+            }
+            
+            .title {
+                font-size: 1.6rem;
+            }
+            
+            .instruction-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .image-container img {
+                max-width: 180px;
+            }
+            
+            .input-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .input-field {
+                min-width: 100%;
+                width: 100%;
+            }
+            
+            .copy-btn {
+                align-self: flex-end;
+            }
+            
+            .footer-buttons {
+                flex-direction: column;
+            }
+            
+            .footer-btn {
+                min-width: 100%;
+            }
+            
+            .empty-state, .load-error {
+                padding: 16px;
+                text-align: center;
+                color: #a1a1aa;
+                background: rgba(239, 68, 68, 0.1);
+                border-radius: 8px;
+                margin-bottom: 16px;
+            }
+            .load-error p, .empty-state p { margin: 0; }
+            
+            .modal-content {
+                padding: 20px 15px;
+            }
+            
+            .modal-title {
+                font-size: 1.3rem;
+            }
+            
+            .modal-subtitle {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Hex values</h1>
+        <button class="instruction-btn" id="instructionBtn" aria-expanded="false" aria-controls="instructionModal">Инструкция по заполнению I1–I5</button>
+        <p class="subtitle">Эта страница для заполнения полей I1–I5 (special junk packet) в клиенте, который поддерживает формат CPS/AWG.</p>
+
+        <div class="input-section" id="inputSection">
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <p>Нет доступных данных. Убедитесь, что файлы I-list1.json–I-list5.json доступны.</p>
+            </div>
+            <div id="fieldsContainer">
+            <div class="input-group">
+                <div class="input-label">I1</div>
+                <input type="text" class="input-field" id="i1" readonly aria-label="Поле I1">
+                <button class="copy-btn" data-target="i1" aria-label="Копировать I1">Копировать</button>
+            </div>
+            <div class="input-group">
+                <div class="input-label">I2</div>
+                <input type="text" class="input-field" id="i2" readonly aria-label="Поле I2">
+                <button class="copy-btn" data-target="i2" aria-label="Копировать I2">Копировать</button>
+            </div>
+            <div class="input-group">
+                <div class="input-label">I3</div>
+                <input type="text" class="input-field" id="i3" readonly aria-label="Поле I3">
+                <button class="copy-btn" data-target="i3" aria-label="Копировать I3">Копировать</button>
+            </div>
+            <div class="input-group">
+                <div class="input-label">I4</div>
+                <input type="text" class="input-field" id="i4" readonly aria-label="Поле I4">
+                <button class="copy-btn" data-target="i4" aria-label="Копировать I4">Копировать</button>
+            </div>
+            <div class="input-group">
+                <div class="input-label">I5</div>
+                <input type="text" class="input-field" id="i5" readonly aria-label="Поле I5">
+                <button class="copy-btn" data-target="i5" aria-label="Копировать I5">Копировать</button>
+            </div>
+            </div>
+            <div id="loadError" class="load-error" style="display: none;">
+                <p>Не удалось загрузить данные. Проверьте подключение или повторите позже.</p>
+            </div>
+        </div>
+
+        <button class="refresh-btn" id="refreshBtn" aria-label="Получить новые значения">Получить новые значения</button>
+        <div id="quotaInfo" class="quota-info" aria-live="polite"></div>
+
+        <!-- intentionally left empty: раньше здесь были ссылки на конкретного клиента, теперь UI нейтрален -->
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite">
+        Набор значений исчерпан. Обновите данные локально.
+    </div>
+
+    <div class="modal-overlay" id="instructionModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-content">
+        <button class="modal-close" id="modalClose" aria-label="Закрыть">&times;</button>
+        
+        <h2 class="modal-title" id="modalTitle" style="text-align: center; padding-right: 0;">Как использовать значения I1–I5</h2>
+        
+        <div style="margin-bottom: 20px;">
+            <p class="modal-text">
+                Эта страница даёт готовые значения I1–I5 в формате <code>&lt;b 0x...&gt;</code>. Ниже — короткая схема, что делать.
+            </p>
+        </div>
+        
+        <ol class="modal-list">
+            <li class="modal-text">
+                Открой сайт с этой страницей и нажми «Получить новые значения» — появятся поля I1–I5 и кнопки «Копировать».
+            </li>
+            <li class="modal-text">
+                В клиенте открой настройки подключения протокола и найди поля для I1–I5 (Special junk packet или аналогичные).
+            </li>
+            <li class="modal-text">
+                Для каждого поля нажми «Копировать» на сайте и вставь значение в соответствующее поле клиента (I1→I1, I2→I2 и т.д.).
+            </li>
+            <li class="modal-text">
+                Сохрани настройки в клиенте и попробуй подключиться. При необходимости можно сгенерировать новые значения и повторить шаги.
+            </li>
+            <li class="modal-text">
+                Если нужно обновить наборы значений, запусти локально скрипт генератора (см. раздел «Как обновлять данные I1–I5» в документации).
+            </li>
+        </ol>
+        
+        <div style="margin-top: 20px; padding: 15px; border-radius: 8px; background: rgba(255, 255, 255, 0.04);">
+            <p class="modal-text" style="font-size: 0.9rem; color: #a1a1aa;">
+                Детальные шаги по конкретному клиенту и версии протокола держи в отдельной личной инструкции, если понадобится.
+            </p>
+        </div>
+    </div>
+</div>
+
+    <script>
+        let availableFiles = [1];
+        let currentDatasetId = null;
+        let totalCycles = 0;
+
+        function getStorageKey(datasetId) {
+            const id = datasetId || 'default';
+            return `hex_values_used_cycles_${id}`;
+        }
+
+        function loadUsedCycles(datasetId, cycles) {
+            if (!cycles || cycles <= 0) return [];
+            try {
+                const raw = localStorage.getItem(getStorageKey(datasetId));
+                if (!raw) return [];
+                const parsed = JSON.parse(raw);
+                if (!Array.isArray(parsed)) return [];
+                return parsed.filter((n) => Number.isInteger(n) && n >= 1 && n <= cycles);
+            } catch {
+                return [];
+            }
+        }
+
+        function saveUsedCycles(datasetId, used) {
+            try {
+                localStorage.setItem(getStorageKey(datasetId), JSON.stringify(used));
+            } catch {
+                // ignore storage errors
+            }
+        }
+
+        function updateQuotaLabel(total, remaining) {
+            const el = document.getElementById('quotaInfo');
+            if (!el) return;
+            if (!total || total <= 0) {
+                el.textContent = '';
+                return;
+            }
+            if (remaining <= 0) {
+                el.textContent = 'Набор значений исчерпан. Обновите данные локально (запустите генератор).';
+            } else {
+                el.textContent = `Осталось уникальных наборов: ${remaining} из ${total}.`;
+            }
+        }
+
+        function showToastOnce() {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 4000);
+        }
+
+        function showExhaustedState() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) {
+                refreshBtn.disabled = true;
+                refreshBtn.textContent = 'Набор исчерпан';
+            }
+            updateQuotaLabel(totalCycles, 0);
+            showExhaustedState.loadedOnce = true;
+            showToastOnce();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            detectAvailableFiles().then(() => {
+                loadRandomValues();
+            });
+            
+            document.getElementById('refreshBtn').addEventListener('click', loadRandomValues);
+            
+            document.querySelectorAll('.copy-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const inputField = document.getElementById(targetId);
+                    const fullValue = inputField && inputField.getAttribute('data-full-value');
+                    if (!fullValue) return;
+                    navigator.clipboard.writeText(fullValue).then(() => {
+                        const originalText = this.textContent;
+                        this.textContent = 'Скопировано!';
+                        setTimeout(() => { this.textContent = originalText; }, 2000);
+                    }).catch(() => {
+                        this.textContent = 'Скопируйте вручную';
+                        setTimeout(() => { this.textContent = 'Копировать'; }, 3000);
+                    });
+                });
+            });
+
+            const instructionBtn = document.getElementById('instructionBtn');
+            const instructionModal = document.getElementById('instructionModal');
+            const modalClose = document.getElementById('modalClose');
+
+            function openModal() {
+                instructionModal.style.display = 'flex';
+                instructionModal.setAttribute('aria-hidden', 'false');
+                instructionBtn.setAttribute('aria-expanded', 'true');
+                modalClose.focus();
+            }
+            function closeModal() {
+                instructionModal.style.display = 'none';
+                instructionModal.setAttribute('aria-hidden', 'true');
+                instructionBtn.setAttribute('aria-expanded', 'false');
+                instructionBtn.focus();
+            }
+
+            instructionBtn.addEventListener('click', openModal);
+            modalClose.addEventListener('click', closeModal);
+            instructionModal.addEventListener('click', function(e) {
+                if (e.target === instructionModal) closeModal();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && instructionModal.style.display === 'flex') closeModal();
+            });
+        });
+
+        async function detectAvailableFiles() {
+            const checkPromises = availableFiles.map(index => {
+                return fetch(`I-list${index}.json`)
+                    .then(response => response.ok ? index : null)
+                    .catch(() => null);
+            });
+            const results = await Promise.all(checkPromises);
+            availableFiles = results.filter(index => index !== null);
+        }
+
+        function showEmptyState() {
+            document.getElementById('emptyState').style.display = 'block';
+            document.getElementById('fieldsContainer').style.display = 'none';
+            document.getElementById('loadError').style.display = 'none';
+        }
+        function showLoadError() {
+            document.getElementById('loadError').style.display = 'block';
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('fieldsContainer').style.display = 'block';
+        }
+        function showFields() {
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('loadError').style.display = 'none';
+            document.getElementById('fieldsContainer').style.display = 'block';
+        }
+
+        async function loadRandomValues() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            refreshBtn.disabled = true;
+            refreshBtn.textContent = 'Загрузка…';
+            if (availableFiles.length === 0) await detectAvailableFiles();
+            if (availableFiles.length === 0) {
+                showEmptyState();
+                refreshBtn.disabled = false;
+                refreshBtn.textContent = 'Получить новые значения';
+                return;
+            }
+            const randomFileIndex = availableFiles[Math.floor(Math.random() * availableFiles.length)];
+            const fileName = `I-list${randomFileIndex}.json`;
+            try {
+                const response = await fetch(fileName);
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const data = await response.json();
+                const packets = data.packets || {};
+                totalCycles = typeof data.cycles === 'number' ? data.cycles : 0;
+                currentDatasetId = data.dataset_id || `default_${totalCycles || 0}`;
+
+                if (!totalCycles || totalCycles <= 0) {
+                    showEmptyState();
+                    refreshBtn.disabled = false;
+                    refreshBtn.textContent = 'Получить новые значения';
+                    updateQuotaLabel(0, 0);
+                    return;
+                }
+
+                const usedCycles = loadUsedCycles(currentDatasetId, totalCycles);
+                if (usedCycles.length >= totalCycles) {
+                    showExhaustedState();
+                    refreshBtn.disabled = false;
+                    return;
+                }
+
+                const availableCycles = [];
+                for (let c = 1; c <= totalCycles; c++) {
+                    if (!usedCycles.includes(c)) availableCycles.push(c);
+                }
+                if (availableCycles.length === 0) {
+                    showExhaustedState();
+                    refreshBtn.disabled = false;
+                    return;
+                }
+
+                const chosenCycle = availableCycles[Math.floor(Math.random() * availableCycles.length)];
+                usedCycles.push(chosenCycle);
+                saveUsedCycles(currentDatasetId, usedCycles);
+                updateQuotaLabel(totalCycles, totalCycles - usedCycles.length);
+
+                showFields();
+                for (let i = 1; i <= 5; i++) {
+                    const inputField = document.getElementById(`i${i}`);
+                    const packetKey = `I${i}_c${chosenCycle}`;
+                    if (packets[packetKey]) {
+                        const fullValue = packets[packetKey];
+                        inputField.value = fullValue.substring(0, 20) + '...';
+                        inputField.setAttribute('data-full-value', fullValue);
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
+                showLoadError();
+            }
+            refreshBtn.disabled = false;
+            refreshBtn.textContent = 'Получить новые значения';
+        }
+    </script>
+</body>
+</html>
