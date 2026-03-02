@@ -49,7 +49,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add web/I-list1.json packets.json
+          git add web/I-list1.json
           git commit -m "chore: refresh I-list1.json data (250 cycles)"
           git push
 
