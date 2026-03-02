@@ -1,7 +1,12 @@
 # Midnight Hex Notebook
 
-**Живой сайт:**  
-`https://bogdanuz.github.io/midnight-hex-notebook/web/`
+<p align="center">
+  <a href="https://bogdanuz.github.io/midnight-hex-notebook/web/" target="_blank">
+    <img src="https://img.shields.io/badge/Открыть_сайт-midnight__hex__notebook-1d4ed8?style=for-the-badge&logo=githubpages&logoColor=white" alt="Открыть сайт midnight-hex-notebook">
+  </a>
+</p>
+
+---
 
 > Локальный генератор и веб-раздача значений I1–I5 в формате hex для подстановки в клиенты с поддержкой CPS.
 
