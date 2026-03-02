@@ -1,5 +1,8 @@
 # Midnight Hex Notebook
 
+**Живой сайт:**  
+`https://bogdanuz.github.io/midnight-hex-notebook/web/`
+
 > Локальный генератор и веб-раздача значений I1–I5 в формате hex для подстановки в клиенты с поддержкой CPS.
 
 ## Что это
